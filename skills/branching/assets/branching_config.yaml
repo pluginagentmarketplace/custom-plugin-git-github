@@ -1,0 +1,10 @@
+strategies:
+  - gitflow
+  - trunk_based
+  - github_flow
+commands:
+  - branch
+  - checkout
+  - switch
+  - merge
+  - rebase

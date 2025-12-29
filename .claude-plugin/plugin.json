@@ -1,0 +1,23 @@
+{
+  "name": "custom-plugin-git-github",
+  "version": "1.0.0",
+  "description": "Git and GitHub mastery plugin - version control, branching, collaboration",
+  "author": {
+    "name": "Plugin Agent Marketplace"
+  },
+  "agents": [
+    "./agents/git-expert.md",
+    "./agents/github-specialist.md"
+  ],
+  "skills": [
+    "./skills/git-basics/SKILL.md",
+    "./skills/branching/SKILL.md",
+    "./skills/collaboration/SKILL.md",
+    "./skills/github-features/SKILL.md",
+    "./skills/advanced-git/SKILL.md"
+  ],
+  "commands": [
+    "./commands/git-help.md"
+  ],
+  "license": "SEE LICENSE IN LICENSE"
+}

@@ -1,0 +1,7 @@
+commands:
+  - rebase_interactive
+  - cherry_pick
+  - bisect
+  - reflog
+  - stash
+  - worktree

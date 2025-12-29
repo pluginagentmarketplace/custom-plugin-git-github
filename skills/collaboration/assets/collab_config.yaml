@@ -1,0 +1,9 @@
+remotes:
+  - origin
+  - upstream
+commands:
+  - clone
+  - fetch
+  - pull
+  - push
+  - remote

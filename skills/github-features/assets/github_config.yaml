@@ -1,0 +1,11 @@
+features:
+  - pull_requests
+  - issues
+  - actions
+  - projects
+  - discussions
+  - pages
+cli:
+  - gh_pr
+  - gh_issue
+  - gh_repo

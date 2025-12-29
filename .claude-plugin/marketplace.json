@@ -1,0 +1,15 @@
+{
+  "name": "pluginagentmarketplace-git-github",
+  "owner": {
+    "name": "Plugin Agent Marketplace",
+    "email": "pluginagentmarketplace@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "custom-plugin-git-github",
+      "source": "./",
+      "description": "Claude Code plugin for git github development",
+      "version": "1.0.0"
+    }
+  ]
+}
