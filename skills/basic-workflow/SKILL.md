@@ -5,7 +5,7 @@ sasmp_version: "1.3.0"
 bonded_agent: git-mentor
 bond_type: PRIMARY_BOND
 category: learning
-version: "1.0.0"
+version: "2.0.0"
 triggers:
   - git workflow
   - daily git
@@ -15,7 +15,88 @@ triggers:
 
 # Basic Workflow Skill
 
+> **Production-Grade Learning Skill** | Version 2.0.0
+
 **Master the daily rhythm of Git operations.**
+
+## Skill Contract
+
+### Input Schema
+```yaml
+input:
+  type: object
+  properties:
+    workflow_type:
+      type: string
+      enum: [solo, feature-branch, quick-fix, team]
+      default: solo
+    current_state:
+      type: object
+      properties:
+        has_remote:
+          type: boolean
+        has_uncommitted:
+          type: boolean
+        current_branch:
+          type: string
+    include_push:
+      type: boolean
+      default: true
+  validation:
+    auto_detect_state: true
+```
+
+### Output Schema
+```yaml
+output:
+  type: object
+  required: [workflow_steps, success]
+  properties:
+    workflow_steps:
+      type: array
+      items:
+        type: object
+        properties:
+          step: integer
+          command: string
+          description: string
+          safe: boolean
+    success:
+      type: boolean
+    warnings:
+      type: array
+      items:
+        type: string
+    diagram:
+      type: string
+```
+
+## Error Handling
+
+### Retry Logic
+```yaml
+retry_config:
+  max_attempts: 3
+  backoff_type: exponential
+  initial_delay_ms: 1000
+  max_delay_ms: 8000
+  retryable:
+    - network_timeout
+    - remote_connection_failed
+```
+
+### Fallback Strategy
+```yaml
+fallback:
+  - trigger: push_rejected
+    action: suggest_pull_first
+  - trigger: merge_conflict
+    action: guide_conflict_resolution
+  - trigger: authentication_failed
+    action: check_credentials
+```
+
+---
 
 ## The Daily Cycle
 
@@ -160,12 +241,12 @@ git push
 
 ### What Makes a Good Commit?
 
-| Attribute | Description |
-|-----------|-------------|
-| **Atomic** | One logical change |
-| **Complete** | Tests pass, code works |
-| **Descriptive** | Clear message |
-| **Small** | Easier to review and revert |
+| Attribute | Description | Example |
+|-----------|-------------|---------|
+| **Atomic** | One logical change | "Add login button" |
+| **Complete** | Tests pass, code works | All tests green |
+| **Descriptive** | Clear message | "Fix: Navbar overlap on mobile" |
+| **Small** | Easier to review/revert | < 200 lines ideal |
 
 ### Commit Message Format
 ```
@@ -248,15 +329,100 @@ git log --oneline --author="Your Name"
 └─────────────────────────────────────────────────────────┘
 ```
 
+---
+
+## Troubleshooting Guide
+
+### Debug Checklist
+```
+□ 1. Remote configured? → git remote -v
+□ 2. Upstream set? → git branch -vv
+□ 3. Clean working tree? → git status
+□ 4. Authentication ok? → git fetch (test)
+```
+
+### Common Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| "rejected non-fast-forward" | Remote has new commits | `git pull` then push |
+| "nothing to commit" | No changes or all staged | Check status |
+| "unmerged files" | Conflict not resolved | Resolve conflicts first |
+| "authentication failed" | Bad credentials | Re-authenticate |
+
+### Log Patterns
+```bash
+# Successful push
+To github.com:user/repo.git
+   abc1234..def5678  main -> main
+
+# Rejected push (need pull)
+! [rejected]        main -> main (non-fast-forward)
+hint: Updates were rejected...
+```
+
+---
+
+## Unit Test Template
+
+```bash
+#!/bin/bash
+# test_workflow.sh
+
+test_pull_updates_local() {
+  # Setup: create remote with commit
+  # Action: git pull
+  # Assert: local has new commit
+}
+
+test_push_sends_changes() {
+  # Setup: create local commit
+  # Action: git push
+  # Assert: remote has new commit
+}
+
+test_status_shows_changes() {
+  # Setup: modify file
+  # Action: git status
+  # Assert: file shown as modified
+}
+```
+
+---
+
+## Observability
+
+```yaml
+logging:
+  level: INFO
+  events:
+    - workflow_started
+    - pull_completed
+    - changes_staged
+    - commit_created
+    - push_completed
+    - error_occurred
+
+metrics:
+  - commits_per_day
+  - push_frequency
+  - conflict_rate
+  - workflow_completion_rate
+```
+
+---
+
 ## Avoiding Common Mistakes
 
-| Mistake | Prevention |
-|---------|------------|
-| Committing sensitive data | Use `.gitignore`, review before commit |
-| Giant commits | Commit frequently, one change at a time |
-| Vague messages | Follow commit message format |
-| Forgetting to pull | Always pull before starting work |
-| Pushing broken code | Test before pushing |
+| Mistake | Prevention | Recovery |
+|---------|------------|----------|
+| Committing sensitive data | Use `.gitignore`, review before commit | Remove from history (complex) |
+| Giant commits | Commit frequently, one change at a time | Split later with rebase -i |
+| Vague messages | Follow commit message format | Amend if not pushed |
+| Forgetting to pull | Always pull before starting work | Pull and merge/rebase |
+| Pushing broken code | Test before pushing | Revert or fix-forward |
+
+---
 
 ## Next Steps
 

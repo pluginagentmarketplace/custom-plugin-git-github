@@ -5,7 +5,7 @@ sasmp_version: "1.3.0"
 bonded_agent: git-expert
 bond_type: PRIMARY_BOND
 category: development
-version: "1.0.0"
+version: "2.0.0"
 triggers:
   - git remote
   - git push
@@ -15,11 +15,82 @@ triggers:
 
 # Collaboration Skill
 
+> **Production-Grade Development Skill** | Version 2.0.0
+
 **Working with remote repositories and teams.**
+
+## Skill Contract
+
+### Input Schema
+```yaml
+input:
+  type: object
+  properties:
+    operation:
+      type: string
+      enum: [clone, fetch, pull, push, remote, sync-fork]
+      default: remote
+    remote_url:
+      type: string
+      format: uri
+    options:
+      type: object
+      properties:
+        force:
+          type: boolean
+          default: false
+        force_with_lease:
+          type: boolean
+          default: false
+```
+
+### Output Schema
+```yaml
+output:
+  type: object
+  required: [result, success]
+  properties:
+    result:
+      type: string
+    success:
+      type: boolean
+    remote_status:
+      type: object
+      properties:
+        ahead: integer
+        behind: integer
+```
+
+## Error Handling
+
+### Retry Logic
+```yaml
+retry_config:
+  max_attempts: 4
+  backoff_type: exponential
+  initial_delay_ms: 2000
+  max_delay_ms: 16000
+  retryable:
+    - network_timeout
+    - connection_refused
+  non_retryable:
+    - authentication_failed
+    - non_fast_forward
+```
+
+### Fallback Strategy
+```yaml
+fallback:
+  - trigger: push_rejected_non_ff
+    action: suggest_pull_rebase
+  - trigger: authentication_failed
+    action: guide_credential_setup
+```
+
+---
 
 ## Remote Repository Basics
 
-### Understanding Remotes
 ```bash
 # List remotes
 git remote -v
@@ -28,208 +99,81 @@ git remote -v
 git remote add origin https://github.com/user/repo.git
 git remote add upstream https://github.com/original/repo.git
 
-# Remove remote
-git remote remove origin
-
 # Change remote URL
 git remote set-url origin https://github.com/user/new-repo.git
-
-# Rename remote
-git remote rename origin github
 ```
 
-### Clone vs Fork vs Mirror
+## Getting & Sharing Changes
 
-| Operation | Purpose | Command |
-|-----------|---------|---------|
-| Clone | Copy for development | `git clone URL` |
-| Fork | Copy to your account | GitHub UI + clone |
-| Mirror | Exact backup | `git clone --mirror URL` |
-
-## Getting Changes
-
-### Fetch (Safe)
-```bash
-# Get remote changes without merging
-git fetch origin
-
-# Fetch all remotes
-git fetch --all
-
-# Fetch and prune deleted branches
-git fetch --prune
-```
-
-### Pull (Fetch + Merge)
-```bash
-# Pull default branch
-git pull
-
-# Pull specific remote/branch
-git pull origin main
-
-# Pull with rebase (cleaner history)
-git pull --rebase origin main
-
-# Pull with autostash
-git pull --autostash
-```
-
-### Comparison
+### Fetch vs Pull
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                  FETCH vs PULL                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  FETCH:                                                     │
-│    Remote ──────► origin/main                               │
-│                   (just updates references)                 │
-│                                                             │
-│  PULL:                                                      │
-│    Remote ──────► origin/main ──────► main                  │
-│                   (fetch)           (merge)                 │
-│                                                             │
-│  Recommendation: Prefer fetch + merge for more control      │
-│                                                             │
+│  FETCH: Remote ──► origin/main (safe, no merge)            │
+│  PULL:  Remote ──► origin/main ──► main (fetch + merge)    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## Sharing Changes
+### Push Safety Matrix
 
-### Push
-```bash
-# Push to tracked remote
-git push
-
-# Push to specific remote/branch
-git push origin main
-
-# Set upstream and push
-git push -u origin feature-branch
-
-# Force push (DANGEROUS!)
-git push --force
-
-# Safe force push
-git push --force-with-lease
-```
-
-### When Force Push is Needed
-
-| Scenario | Use Case | Safety |
-|----------|----------|--------|
-| After rebase | History changed | Use --force-with-lease |
-| Amend pushed commit | Fix mistake | Only on personal branches |
-| Clean up PR | Squash commits | After communication |
+| Method | Risk | Use Case |
+|--------|------|----------|
+| `git push` | LOW | Normal push |
+| `git push --force-with-lease` | MEDIUM | After rebase |
+| `git push --force` | CRITICAL | Never on shared |
 
 ## Team Workflows
 
 ### Fork + Pull Request
 ```bash
-# 1. Fork on GitHub
-# 2. Clone your fork
 git clone https://github.com/YOU/repo.git
-
-# 3. Add upstream
 git remote add upstream https://github.com/ORIGINAL/repo.git
-
-# 4. Create feature branch
 git checkout -b feature-x
-
-# 5. Make changes and commit
-git add .
-git commit -m "feat: add feature"
-
-# 6. Push to your fork
+# ... work and commit ...
 git push -u origin feature-x
-
-# 7. Create PR on GitHub
+# Create PR on GitHub
 ```
 
-### Sync Fork with Upstream
+### Sync Fork
 ```bash
-# Fetch upstream changes
 git fetch upstream
-
-# Merge into your main
 git checkout main
 git merge upstream/main
-
-# Push to your fork
 git push origin main
 ```
 
-### Feature Branch Workflow
+---
+
+## Troubleshooting Guide
+
+### Debug Checklist
 ```
-┌─────────────────────────────────────────────────────────────┐
-│              FEATURE BRANCH WORKFLOW                        │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  1. git checkout main                                       │
-│  2. git pull origin main                                    │
-│  3. git checkout -b feature/name                            │
-│  4. # ... work and commit ...                               │
-│  5. git push -u origin feature/name                         │
-│  6. # Create PR on GitHub                                   │
-│  7. # After review and merge                                │
-│  8. git checkout main                                       │
-│  9. git pull origin main                                    │
-│ 10. git branch -d feature/name                              │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+□ 1. Remote configured? → git remote -v
+□ 2. Authenticated? → git fetch (test)
+□ 3. Branch tracking? → git branch -vv
 ```
 
-## Conflict Resolution in Teams
+### Common Issues
 
-### Before Merging PR
-```bash
-# Update your branch with latest main
-git checkout feature-x
-git fetch origin
-git rebase origin/main
+| Error | Cause | Solution |
+|-------|-------|----------|
+| "rejected non-fast-forward" | Remote ahead | Pull first |
+| "authentication failed" | Bad credentials | Re-authenticate |
 
-# If conflicts:
-# 1. Resolve conflicts in files
-# 2. git add .
-# 3. git rebase --continue
+---
 
-# Force push updated branch
-git push --force-with-lease
+## Observability
+
+```yaml
+logging:
+  events:
+    - push_completed
+    - push_rejected
+    - authentication_error
+
+metrics:
+  - push_success_rate
+  - conflict_rate
 ```
-
-### Communication Best Practices
-
-| Situation | Action |
-|-----------|--------|
-| Before force push | Notify team |
-| Resolving conflicts | Consult original author |
-| Merging large PR | Get second review |
-| Breaking changes | Document and announce |
-
-## Multi-Remote Setup
-
-```bash
-# Common setup for contributors
-git remote -v
-# origin    https://github.com/YOU/repo.git (your fork)
-# upstream  https://github.com/ORIGINAL/repo.git (main repo)
-
-# For maintainers
-git remote -v
-# origin    https://github.com/ORG/repo.git (main)
-# staging   https://github.com/ORG/repo-staging.git
-```
-
-## Command Reference
-
-| Command | Purpose |
-|---------|---------|
-| `git clone` | Copy repository |
-| `git remote` | Manage remotes |
-| `git fetch` | Get changes (no merge) |
-| `git pull` | Get and merge changes |
-| `git push` | Send changes |
-| `git push -u` | Push and set upstream |
 
 ---
 

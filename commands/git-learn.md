@@ -2,9 +2,12 @@
 description: Learn Git concepts with interactive explanations and examples
 allowed-tools: Read, Bash
 category: learning
+version: "2.0.0"
 ---
 
 # Git Learn Command
+
+> **Production-Grade Command** | Version 2.0.0
 
 Interactive learning command for Git concepts.
 
@@ -14,33 +17,56 @@ Interactive learning command for Git concepts.
 /git-learn [topic]
 ```
 
-## Topics
+## Input Validation
 
-### Beginner Topics
+```yaml
+parameters:
+  topic:
+    type: string
+    required: false
+    default: basics
+    validation: [lowercase, trim]
+    allowed_values:
+      - basics
+      - workflow
+      - branching
+      - remote
+      - merge
+      - rebase
+      - conflict
+      - stash
+      - reflog
+      - bisect
+      - cherry-pick
+      - submodules
+```
+
+## Topics by Level
+
+### Beginner
 - `basics` - Git fundamentals (init, add, commit)
 - `workflow` - Daily Git workflow
 - `branching` - Working with branches
 - `remote` - Push, pull, clone operations
 
-### Intermediate Topics
+### Intermediate
 - `merge` - Merging strategies
 - `rebase` - Rebasing workflows
 - `conflict` - Conflict resolution
 - `stash` - Temporary storage
 
-### Advanced Topics
+### Advanced
 - `reflog` - History recovery
 - `bisect` - Bug hunting
 - `cherry-pick` - Selective commits
 - `submodules` - Nested repositories
 
-## Examples
+## Exit Codes
 
-```bash
-/git-learn basics
-/git-learn branching
-/git-learn conflict
-```
+| Code | Meaning |
+|------|---------|
+| 0 | Success |
+| 1 | Unknown topic |
 
 ## Response Format
 
@@ -58,3 +84,11 @@ When invoked, provide:
 - Provide hands-on exercises
 - Show before/after states
 - Highlight common pitfalls
+
+## Error Handling
+
+```yaml
+fallback:
+  - trigger: unknown_topic
+    action: suggest_similar_topics
+```
