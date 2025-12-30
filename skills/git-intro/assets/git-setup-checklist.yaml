@@ -1,0 +1,74 @@
+# Git Setup Checklist Configuration
+# Use this to guide new users through Git installation
+
+name: git-setup-checklist
+version: "1.0.0"
+
+platforms:
+  macos:
+    installation_methods:
+      - name: Xcode Command Line Tools
+        command: "xcode-select --install"
+        recommended: true
+        notes: "Includes Git and other dev tools"
+      - name: Homebrew
+        command: "brew install git"
+        recommended: false
+        notes: "Good for version management"
+
+  windows:
+    installation_methods:
+      - name: Git for Windows
+        url: "https://git-scm.com/download/windows"
+        recommended: true
+        notes: "Includes Git Bash and GUI"
+      - name: Winget
+        command: "winget install --id Git.Git -e --source winget"
+        recommended: false
+
+  linux:
+    ubuntu:
+      command: "sudo apt install git"
+    fedora:
+      command: "sudo dnf install git"
+    arch:
+      command: "sudo pacman -S git"
+
+post_install_checklist:
+  - step: "Verify installation"
+    command: "git --version"
+    expected: "git version X.XX.X"
+
+  - step: "Set user name"
+    command: 'git config --global user.name "Your Name"'
+    required: true
+
+  - step: "Set email"
+    command: 'git config --global user.email "email@example.com"'
+    required: true
+
+  - step: "Set default branch name"
+    command: "git config --global init.defaultBranch main"
+    required: false
+    recommended: true
+
+  - step: "Set editor"
+    command: 'git config --global core.editor "code --wait"'
+    required: false
+    options:
+      vscode: 'code --wait'
+      vim: 'vim'
+      nano: 'nano'
+      sublime: 'subl -n -w'
+
+  - step: "Verify configuration"
+    command: "git config --list"
+    required: true
+
+first_repo_steps:
+  - "mkdir my-project && cd my-project"
+  - "git init"
+  - 'echo "# My Project" > README.md'
+  - "git add README.md"
+  - 'git commit -m "Initial commit"'
+  - "git log"

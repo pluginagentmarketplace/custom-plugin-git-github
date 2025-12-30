@@ -8,8 +8,26 @@
     {
       "name": "custom-plugin-git-github",
       "source": "./",
-      "description": "Claude Code plugin for git github development",
-      "version": "1.0.0"
+      "description": "Complete Git & GitHub mastery - Learning AND Development with expert AI agents",
+      "version": "2.0.0",
+      "type": "HYBRID",
+      "stats": {
+        "agents": 3,
+        "skills": 7,
+        "commands": 4
+      },
+      "categories": {
+        "learning": {
+          "agents": ["git-mentor"],
+          "skills": ["git-intro", "git-basics", "basic-workflow"],
+          "commands": ["git-learn", "git-practice"]
+        },
+        "development": {
+          "agents": ["git-expert", "github-specialist"],
+          "skills": ["branching", "collaboration", "advanced-git", "github-features"],
+          "commands": ["git-help", "git-workflow"]
+        }
+      }
     }
   ]
 }

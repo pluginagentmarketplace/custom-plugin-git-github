@@ -1,0 +1,150 @@
+# Git Workflow Patterns Configuration
+# Common workflow scenarios and their command sequences
+
+name: git-workflow-patterns
+version: "1.0.0"
+
+daily_cycle:
+  morning:
+    - command: "git pull origin main"
+      purpose: "Get latest changes from team"
+      required: true
+
+  before_work:
+    - command: "git status"
+      purpose: "Check current state"
+      required: true
+
+  during_work:
+    - command: "git diff"
+      purpose: "Review your changes"
+      optional: true
+
+  save_work:
+    - command: "git add <files>"
+      purpose: "Stage changes"
+      required: true
+    - command: 'git commit -m "message"'
+      purpose: "Save with description"
+      required: true
+
+  end_of_day:
+    - command: "git push"
+      purpose: "Share with team"
+      required: true
+
+commit_message_format:
+  structure: |
+    type(scope): subject
+
+    body
+
+    footer
+
+  types:
+    - type: feat
+      description: "New feature"
+      example: "feat(auth): add password reset flow"
+
+    - type: fix
+      description: "Bug fix"
+      example: "fix(login): resolve timeout on slow networks"
+
+    - type: docs
+      description: "Documentation only"
+      example: "docs(readme): update installation steps"
+
+    - type: style
+      description: "Formatting, no code change"
+      example: "style(css): fix indentation in header"
+
+    - type: refactor
+      description: "Code restructure"
+      example: "refactor(utils): simplify date formatting"
+
+    - type: test
+      description: "Adding or updating tests"
+      example: "test(api): add tests for user endpoints"
+
+    - type: chore
+      description: "Maintenance tasks"
+      example: "chore(deps): update dependencies"
+
+  rules:
+    subject_max_length: 50
+    body_wrap_at: 72
+    use_imperative: true
+    capitalize_first_letter: true
+    no_period_at_end: true
+
+workflow_patterns:
+  solo_development:
+    description: "Working alone on a project"
+    steps:
+      - "git pull"
+      - "# do your work"
+      - "git status"
+      - "git add ."
+      - 'git commit -m "message"'
+      - "git push"
+
+  feature_branch:
+    description: "Working on a specific feature"
+    steps:
+      - "git checkout main"
+      - "git pull"
+      - "git checkout -b feature/name"
+      - "# do your work"
+      - "git add ."
+      - 'git commit -m "feat: description"'
+      - "git push -u origin feature/name"
+      - "# create pull request"
+
+  hot_fix:
+    description: "Urgent fix on production"
+    steps:
+      - "git checkout main"
+      - "git pull"
+      - "git checkout -b hotfix/issue"
+      - "# make fix"
+      - "git add ."
+      - 'git commit -m "fix: description"'
+      - "git push -u origin hotfix/issue"
+      - "# immediate review and merge"
+
+  code_review:
+    description: "Reviewing someone else's work"
+    steps:
+      - "git fetch origin"
+      - "git checkout feature/their-branch"
+      - "# review code"
+      - "# provide feedback"
+      - "git checkout main"
+
+undo_scenarios:
+  unstage_file:
+    command: "git restore --staged <file>"
+    when: "You added a file but don't want to commit it"
+
+  discard_changes:
+    command: "git restore <file>"
+    when: "You want to undo changes in working directory"
+    warning: "DESTRUCTIVE - cannot undo!"
+
+  amend_last_commit:
+    command: "git commit --amend"
+    when: "You want to fix the last commit message or add files"
+    warning: "Only before pushing!"
+
+  reset_soft:
+    command: "git reset --soft HEAD~1"
+    when: "Undo last commit, keep changes staged"
+
+  reset_mixed:
+    command: "git reset HEAD~1"
+    when: "Undo last commit, keep changes unstaged"
+
+  reset_hard:
+    command: "git reset --hard HEAD~1"
+    when: "Undo last commit and discard changes"
+    warning: "DESTRUCTIVE - cannot undo!"

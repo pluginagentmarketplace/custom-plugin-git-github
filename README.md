@@ -1,248 +1,269 @@
-<div align="center">
+# Git & GitHub Mastery System
 
-<!-- Animated Typing Banner -->
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&duration=3000&pause=1000&color=2E9EF7&center=true&vCenter=true&multiline=true&repeat=true&width=600&height=100&lines=Git+Github+Assistant;2+Agents+%7C+5+Skills;Claude+Code+Plugin" alt="Git Github Assistant" />
+[![SASMP v1.3.0](https://img.shields.io/badge/SASMP-v1.3.0-blue.svg)](https://github.com/pluginagentmarketplace)
+[![Git](https://img.shields.io/badge/Git-2.x-orange?logo=git)](https://git-scm.com)
+[![GitHub](https://img.shields.io/badge/GitHub-CLI-black?logo=github)](https://cli.github.com)
+[![Plugin Type](https://img.shields.io/badge/Type-Hybrid-purple.svg)](https://github.com/pluginagentmarketplace)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-<br/>
+**Complete Git & GitHub Mastery System** - Learn AND Develop with expert AI agents. Master version control from basics to advanced workflows.
 
-<!-- Badge Row 1: Status Badges -->
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=for-the-badge)](https://github.com/pluginagentmarketplace/custom-plugin-git-github/releases)
-[![License](https://img.shields.io/badge/License-Custom-yellow?style=for-the-badge)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Production-brightgreen?style=for-the-badge)](#)
-[![SASMP](https://img.shields.io/badge/SASMP-v1.3.0-blueviolet?style=for-the-badge)](#)
+## Plugin Type: HYBRID
 
-<!-- Badge Row 2: Content Badges -->
-[![Agents](https://img.shields.io/badge/Agents-2-orange?style=flat-square&logo=robot)](#-agents)
-[![Skills](https://img.shields.io/badge/Skills-5-purple?style=flat-square&logo=lightning)](#-skills)
-[![Commands](https://img.shields.io/badge/Commands-1-green?style=flat-square&logo=terminal)](#-commands)
+This plugin serves **two purposes**:
 
-<br/>
-
-<!-- Quick CTA Row -->
-[📦 **Install Now**](#-quick-start) · [🤖 **Explore Agents**](#-agents) · [📖 **Documentation**](#-documentation) · [⭐ **Star this repo**](https://github.com/pluginagentmarketplace/custom-plugin-git-github)
+| Mode | Purpose | For Who |
+|------|---------|---------|
+| **Learning** | Understand Git concepts | Beginners, Students |
+| **Development** | Professional Git workflows | Developers, Teams |
 
 ---
 
-### What is this?
+## Features Overview
 
-> **Git Github Assistant** is a Claude Code plugin with **2 agents** and **5 skills** for git github development.
-
-</div>
-
----
-
-## 📑 Table of Contents
-
-<details>
-<summary>Click to expand</summary>
-
-- [Quick Start](#-quick-start)
-- [Features](#-features)
-- [Agents](#-agents)
-- [Skills](#-skills)
-- [Commands](#-commands)
-- [Documentation](#-documentation)
-- [Contributing](#-contributing)
-- [License](#-license)
-
-</details>
+| Category | Count | Items |
+|----------|-------|-------|
+| **Agents** | 3 | 1 Learning + 2 Development |
+| **Skills** | 7 | 3 Learning + 4 Development |
+| **Commands** | 4 | 2 Learning + 2 Development |
 
 ---
 
-## 🚀 Quick Start
+## Learning Mode
 
-### Prerequisites
+### Learning Agent
 
-- Claude Code CLI v2.0.27+
-- Active Claude subscription
+| Agent | Expertise |
+|-------|-----------|
+| `git-mentor` | Patient Git teaching with visual explanations |
 
-### Installation (Choose One)
-
-<details open>
-<summary><strong>Option 1: From Marketplace (Recommended)</strong></summary>
+### Learning Commands
 
 ```bash
-# Step 1️⃣ Add the marketplace
-/plugin add marketplace pluginagentmarketplace/custom-plugin-git-github
-
-# Step 2️⃣ Install the plugin
-/plugin install custom-plugin-git-github@pluginagentmarketplace-git-github
-
-# Step 3️⃣ Restart Claude Code
-# Close and reopen your terminal/IDE
+/git-learn basics       # Learn Git fundamentals
+/git-learn branching    # Understand branches
+/git-practice easy      # Beginner exercises
+/git-practice medium    # Intermediate challenges
 ```
 
-</details>
+### Learning Skills
 
-<details>
-<summary><strong>Option 2: Local Installation</strong></summary>
-
-```bash
-# Clone the repository
-git clone https://github.com/pluginagentmarketplace/custom-plugin-git-github.git
-cd custom-plugin-git-github
-
-# Load locally
-/plugin load .
-
-# Restart Claude Code
-```
-
-</details>
-
-### ✅ Verify Installation
-
-After restart, you should see these agents:
-
-```
-custom-plugin-git-github:github-specialist
-custom-plugin-git-github:git-expert
-```
+- **git-intro** - What is Git, installation, first steps
+- **git-basics** - Core commands (init, add, commit, status, log)
+- **basic-workflow** - Daily add-commit-push cycle
 
 ---
 
-## ✨ Features
+## Development Mode
 
-| Feature | Description |
-|---------|-------------|
-| 🤖 **2 Agents** | Specialized AI agents for git github tasks |
-| 🛠️ **5 Skills** | Reusable capabilities with Golden Format |
-| ⌨️ **1 Commands** | Quick slash commands |
-| 🔄 **SASMP v1.3.0** | Full protocol compliance |
+### Development Agents
 
----
+| Agent | Purpose |
+|-------|---------|
+| `git-expert` | Advanced Git operations, rebasing, history |
+| `github-specialist` | PRs, Actions, Issues, platform features |
 
-## 🤖 Agents
-
-### 2 Specialized Agents
-
-| # | Agent | Purpose |
-|---|-------|---------|
-| 1 | **github-specialist** | GitHub platform specialist - PRs, issues, actions, and colla |
-| 2 | **git-expert** | Git version control expert - commits, branches, merges, reba |
-
----
-
-## 🛠️ Skills
-
-### Available Skills
-
-| Skill | Description | Invoke |
-|-------|-------------|--------|
-| `git-basics` | Git fundamentals - init, add, commit, status, log | `Skill("custom-plugin-git-github:git-basics")` |
-| `collaboration` | Team collaboration - remote, fetch, pull, push, clone | `Skill("custom-plugin-git-github:collaboration")` |
-| `github-features` | GitHub platform features - PRs, issues, actions, projects | `Skill("custom-plugin-git-github:github-features")` |
-| `branching` | Git branching strategies - create, switch, merge, rebase | `Skill("custom-plugin-git-github:branching")` |
-| `advanced-git` | Advanced Git - interactive rebase, cherry-pick, bisect, refl | `Skill("custom-plugin-git-github:advanced-git")` |
-
----
-
-## ⌨️ Commands
+### Development Commands
 
 | Command | Description |
 |---------|-------------|
-| `/git-help` | Get help with Git and GitHub commands |
+| `/git-help` | Git command assistance |
+| `/git-workflow feature <name>` | Create feature branch |
+| `/git-workflow hotfix <name>` | Create hotfix branch |
+| `/git-workflow release <ver>` | Prepare release |
+
+### Development Skills
+
+- **branching** - GitFlow, GitHub Flow, trunk-based dev
+- **collaboration** - Remote repos, team workflows
+- **advanced-git** - Rebase, cherry-pick, bisect, reflog
+- **github-features** - PRs, Actions, Issues, Pages
 
 ---
 
-## 📚 Documentation
-
-| Document | Description |
-|----------|-------------|
-| [CHANGELOG.md](CHANGELOG.md) | Version history |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
-| [LICENSE](LICENSE) | License information |
-
----
-
-## 📁 Project Structure
-
-<details>
-<summary>Click to expand</summary>
+## Plugin Structure
 
 ```
 custom-plugin-git-github/
-├── 📁 .claude-plugin/
-│   ├── plugin.json
-│   └── marketplace.json
-├── 📁 agents/              # 2 agents
-├── 📁 skills/              # 5 skills (Golden Format)
-├── 📁 commands/            # 1 commands
-├── 📁 hooks/
-├── 📄 README.md
-├── 📄 CHANGELOG.md
-└── 📄 LICENSE
+├── agents/
+│   ├── git-mentor.md          # Learning
+│   ├── git-expert.md          # Development
+│   └── github-specialist.md   # Development
+├── skills/
+│   ├── git-intro/             # Learning
+│   │   ├── SKILL.md
+│   │   ├── assets/
+│   │   ├── scripts/
+│   │   └── references/
+│   ├── git-basics/            # Learning
+│   ├── basic-workflow/        # Learning
+│   ├── branching/             # Development
+│   ├── collaboration/         # Development
+│   ├── advanced-git/          # Development
+│   └── github-features/       # Development
+├── commands/
+│   ├── git-help.md            # Development
+│   ├── git-learn.md           # Learning
+│   ├── git-practice.md        # Learning
+│   └── git-workflow.md        # Development
+├── hooks/
+│   └── hooks.json
+└── .claude-plugin/
+    ├── plugin.json
+    └── marketplace.json
 ```
 
-</details>
+---
+
+## Topics Covered
+
+### Learning Path
+```
+1. Git Introduction
+   └── What is Git? Why use it?
+       └── Installation & Setup
+
+2. Basic Operations
+   └── init, add, commit, status, log
+       └── The Three Areas
+
+3. Daily Workflow
+   └── pull, work, add, commit, push
+       └── Commit Messages
+```
+
+### Development Topics
+```
+1. Branching Strategies
+   ├── GitFlow
+   ├── GitHub Flow
+   └── Trunk-Based Development
+
+2. Collaboration
+   ├── Remotes & Forks
+   ├── Pull Requests
+   └── Code Review
+
+3. Advanced Operations
+   ├── Interactive Rebase
+   ├── Cherry-Pick
+   ├── Bisect
+   └── Reflog Recovery
+
+4. GitHub Platform
+   ├── Actions CI/CD
+   ├── Issues & Projects
+   ├── Branch Protection
+   └── Releases
+```
 
 ---
 
-## 📅 Metadata
+## Installation
 
-| Field | Value |
-|-------|-------|
-| **Version** | 1.0.0 |
-| **Last Updated** | 2025-12-29 |
-| **Status** | Production Ready |
-| **SASMP** | v1.3.0 |
-| **Agents** | 2 |
-| **Skills** | 5 |
-| **Commands** | 1 |
+```bash
+# Via Claude Code plugin marketplace
+/plugin add marketplace pluginagentmarketplace/custom-plugin-git-github
+/plugin install custom-plugin-git-github@pluginagentmarketplace-git-github
+```
 
 ---
 
-## 🤝 Contributing
+## Usage Examples
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md).
+### Learning Flow
+```bash
+# 1. Start with introduction
+/git-learn basics
 
-1. Fork the repository
-2. Create your feature branch
-3. Follow the Golden Format for new skills
-4. Submit a pull request
+# 2. Practice basic operations
+/git-practice easy basics
 
----
+# 3. Learn branching
+/git-learn branching
 
-## ⚠️ Security
+# 4. Practice with scenarios
+/git-practice medium branches
+```
 
-> **Important:** This repository contains third-party code and dependencies.
->
-> - ✅ Always review code before using in production
-> - ✅ Check dependencies for known vulnerabilities
-> - ✅ Follow security best practices
-> - ✅ Report security issues privately via [Issues](../../issues)
+### Development Flow
+```bash
+# 1. Start feature
+/git-workflow feature user-auth
 
----
+# 2. Get Git help
+/git-help
 
-## 📝 License
+# 3. Advanced operations
+Ask git-expert: "How do I squash my last 3 commits?"
 
-Copyright © 2025 **Dr. Umit Kacar** & **Muhsin Elcicek**
-
-Custom License - See [LICENSE](LICENSE) for details.
-
----
-
-## 👥 Contributors
-
-<table>
-<tr>
-<td align="center">
-<strong>Dr. Umit Kacar</strong><br/>
-Senior AI Researcher & Engineer
-</td>
-<td align="center">
-<strong>Muhsin Elcicek</strong><br/>
-Senior Software Architect
-</td>
-</tr>
-</table>
+# 4. GitHub assistance
+Ask github-specialist: "Create a GitHub Action for testing"
+```
 
 ---
 
-<div align="center">
+## Quick Reference
 
-**Made with ❤️ for the Claude Code Community**
+### Essential Git Commands
+```bash
+# Basic
+git init                    # Start tracking
+git status                  # Check state
+git add <file>             # Stage changes
+git commit -m "msg"        # Save changes
+git log --oneline          # View history
 
-[![GitHub](https://img.shields.io/badge/GitHub-pluginagentmarketplace-black?style=for-the-badge&logo=github)](https://github.com/pluginagentmarketplace)
+# Branching
+git branch                  # List branches
+git checkout -b <name>      # Create & switch
+git merge <branch>          # Combine branches
 
-</div>
+# Remote
+git clone <url>            # Download repo
+git pull                    # Get latest
+git push                    # Share changes
+```
+
+### Essential GitHub CLI
+```bash
+# Authenticate
+gh auth login
+
+# Pull Requests
+gh pr create --title "Title"
+gh pr list
+gh pr merge 123 --squash
+
+# Issues
+gh issue create --title "Bug"
+gh issue list
+```
+
+---
+
+## Version History
+
+| Version | Date | Type | Changes |
+|---------|------|------|---------|
+| 2.0.0 | 2025-12-29 | Hybrid | Merged with beginner plugin, added learning mode |
+| 1.0.0 | 2025-12-29 | Development | Initial release with 2 agents, 5 skills |
+
+---
+
+## Related Resources
+
+- [Pro Git Book](https://git-scm.com/book/en/v2)
+- [GitHub Docs](https://docs.github.com)
+- [GitHub CLI Manual](https://cli.github.com/manual/)
+- [Learn Git Branching](https://learngitbranching.js.org/)
+
+---
+
+## License
+
+MIT License - See [LICENSE](LICENSE) for details.
+
+## Author
+
+Plugin Agent Marketplace - [pluginagentmarketplace@gmail.com](mailto:pluginagentmarketplace@gmail.com)
