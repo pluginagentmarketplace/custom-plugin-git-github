@@ -5,7 +5,7 @@ sasmp_version: "1.3.0"
 bonded_agent: git-mentor
 bond_type: PRIMARY_BOND
 category: learning
-version: "1.0.0"
+version: "2.0.0"
 triggers:
   - what is git
   - git introduction
@@ -15,7 +15,98 @@ triggers:
 
 # Git Introduction Skill
 
+> **Production-Grade Learning Skill** | Version 2.0.0
+
 **Your first steps into the world of version control.**
+
+## Skill Contract
+
+### Input Schema
+```yaml
+input:
+  type: object
+  properties:
+    topic:
+      type: string
+      enum: [what-is-git, why-use-git, installation, first-setup, first-repo]
+      default: what-is-git
+    os:
+      type: string
+      enum: [macos, windows, linux, unknown]
+      default: unknown
+    experience_level:
+      type: string
+      enum: [complete-beginner, some-coding, used-other-vcs]
+      default: complete-beginner
+  validation:
+    custom: true
+    rules:
+      - if_unknown_os: detect_from_environment
+```
+
+### Output Schema
+```yaml
+output:
+  type: object
+  required: [explanation, success]
+  properties:
+    explanation:
+      type: string
+      format: markdown
+    success:
+      type: boolean
+    visual_aid:
+      type: string
+      description: ASCII diagram if applicable
+    next_steps:
+      type: array
+      items:
+        type: string
+    commands_to_try:
+      type: array
+      items:
+        type: object
+        properties:
+          command: string
+          description: string
+          safe: boolean
+```
+
+## Error Handling
+
+### Validation Rules
+```yaml
+parameter_validation:
+  topic:
+    required: false
+    sanitize: lowercase_trim
+    fallback: what-is-git
+  os:
+    required: false
+    auto_detect: true
+    detection_command: uname -s || ver
+```
+
+### Retry Logic
+```yaml
+retry_config:
+  max_attempts: 2
+  backoff_ms: [1000, 2000]
+  retryable_scenarios:
+    - command_timeout
+    - os_detection_failed
+```
+
+### Fallback Strategy
+```yaml
+fallback:
+  - scenario: installation_failed
+    action: provide_manual_instructions
+  - scenario: command_not_found
+    action: check_path_and_suggest
+```
+
+---
 
 ## What is Git?
 
@@ -71,7 +162,7 @@ commit 1 ← Or even further back!
 
 ### macOS
 ```bash
-# Option 1: Xcode Command Line Tools
+# Option 1: Xcode Command Line Tools (recommended)
 xcode-select --install
 
 # Option 2: Homebrew
@@ -80,8 +171,10 @@ brew install git
 
 ### Windows
 ```bash
+# Option 1: Git for Windows (recommended)
 # Download from https://git-scm.com/download/windows
-# Or use winget
+
+# Option 2: winget
 winget install --id Git.Git -e --source winget
 ```
 
@@ -100,7 +193,7 @@ sudo pacman -S git
 ### Verify Installation
 ```bash
 git --version
-# git version 2.42.0 (or similar)
+# Expected: git version 2.42.0 (or similar)
 ```
 
 ## First-Time Setup
@@ -127,15 +220,14 @@ cd my-first-project
 
 # 2. Initialize Git (creates .git folder)
 git init
-# Initialized empty Git repository in .../my-first-project/.git/
+# Output: Initialized empty Git repository in .../my-first-project/.git/
 
 # 3. Create a file
 echo "# My Project" > README.md
 
 # 4. Check status
 git status
-# On branch main
-# Untracked files: README.md
+# Output: Untracked files: README.md
 
 # 5. Stage the file
 git add README.md
@@ -144,18 +236,8 @@ git add README.md
 git commit -m "Initial commit: Add README"
 
 # 7. View history
-git log
+git log --oneline
 ```
-
-## Common First Commands
-
-| Command | What It Does | When To Use |
-|---------|--------------|-------------|
-| `git init` | Start tracking folder | Once per project |
-| `git status` | Show current state | Constantly! |
-| `git add` | Prepare files for commit | Before commit |
-| `git commit` | Save your work | When complete unit of work |
-| `git log` | View history | To see past commits |
 
 ## Quick Reference Card
 
@@ -179,6 +261,84 @@ git log
 │   git diff              See changes                        │
 └────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Troubleshooting Guide
+
+### Debug Checklist
+```
+□ 1. Is Git installed? → git --version
+□ 2. Correct version? → Should be 2.x or higher
+□ 3. User configured? → git config user.name
+□ 4. Editor set? → git config core.editor
+```
+
+### Common Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| "command not found: git" | Not installed or not in PATH | Reinstall or add to PATH |
+| "Author identity unknown" | User not configured | Run git config commands |
+| "not a git repository" | Missing .git folder | Run git init |
+
+### Log Patterns
+```bash
+# Successful init
+Initialized empty Git repository in /path/.git/
+
+# Successful commit
+[main abc1234] Your message
+ 1 file changed, 1 insertion(+)
+```
+
+---
+
+## Unit Test Template
+
+```bash
+#!/bin/bash
+# test_git_intro.sh
+
+test_git_installed() {
+  git --version > /dev/null 2>&1
+  assertEquals 0 $?
+}
+
+test_user_configured() {
+  name=$(git config user.name)
+  assertNotNull "$name"
+}
+
+test_init_creates_git_folder() {
+  tmpdir=$(mktemp -d)
+  cd "$tmpdir"
+  git init
+  assertTrue "[ -d .git ]"
+  rm -rf "$tmpdir"
+}
+```
+
+---
+
+## Observability
+
+```yaml
+logging:
+  level: INFO
+  events:
+    - skill_invoked
+    - installation_checked
+    - config_verified
+    - first_commit_created
+
+metrics:
+  - installation_success_rate
+  - time_to_first_commit
+  - common_error_types
+```
+
+---
 
 ## Next Steps
 

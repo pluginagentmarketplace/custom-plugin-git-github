@@ -5,7 +5,7 @@ sasmp_version: "1.3.0"
 bonded_agent: git-expert
 bond_type: PRIMARY_BOND
 category: development
-version: "1.0.0"
+version: "2.0.0"
 triggers:
   - git branch
   - git merge
@@ -15,7 +15,86 @@ triggers:
 
 # Branching Skill
 
+> **Production-Grade Development Skill** | Version 2.0.0
+
 **Effective branching and merging strategies for development workflows.**
+
+## Skill Contract
+
+### Input Schema
+```yaml
+input:
+  type: object
+  properties:
+    operation:
+      type: string
+      enum: [create, switch, merge, rebase, delete, list, strategy]
+      default: list
+    branch_name:
+      type: string
+      pattern: "^[a-zA-Z0-9/_-]+$"
+      maxLength: 100
+    strategy:
+      type: string
+      enum: [gitflow, github-flow, trunk-based]
+    options:
+      type: object
+      properties:
+        force:
+          type: boolean
+          default: false
+        dry_run:
+          type: boolean
+          default: false
+```
+
+### Output Schema
+```yaml
+output:
+  type: object
+  required: [result, success]
+  properties:
+    result:
+      type: string
+    success:
+      type: boolean
+    branches_affected:
+      type: array
+      items:
+        type: string
+    warnings:
+      type: array
+    rollback_command:
+      type: string
+```
+
+## Error Handling
+
+### Retry Logic
+```yaml
+retry_config:
+  max_attempts: 2
+  backoff_ms: [1000, 2000]
+  retryable:
+    - lock_file_exists
+    - network_timeout
+  non_retryable:
+    - merge_conflict
+    - branch_not_found
+```
+
+### Fallback Strategy
+```yaml
+fallback:
+  - trigger: merge_conflict
+    action: abort_and_guide_manual_resolution
+    command: git merge --abort
+  - trigger: rebase_conflict
+    action: abort_and_suggest_merge
+    command: git rebase --abort
+```
+
+---
 
 ## Branch Basics
 
@@ -47,7 +126,6 @@ git push origin --delete feature-x  # Delete remote
 ┌─────────────────────────────────────────────────────────────┐
 │                       GITFLOW                               │
 ├─────────────────────────────────────────────────────────────┤
-│                                                             │
 │ main    ●─────────────────●───────────────●──────────►     │
 │          ↑                 ↑               ↑                │
 │ release  ├─────●───────────┤               │                │
@@ -55,14 +133,6 @@ git push origin --delete feature-x  # Delete remote
 │ develop  ├──●──┴──●──●──●──┴──●──●──●──●──┴──●──●──────►   │
 │          │  ↑     ↑     ↑     ↑     ↑                       │
 │ feature  └──┴─────┴─────┴─────┴─────┘                       │
-│                                                             │
-│ Branches:                                                   │
-│   main     - Production-ready code                          │
-│   develop  - Integration branch                             │
-│   feature/ - New features                                   │
-│   release/ - Release preparation                            │
-│   hotfix/  - Production fixes                               │
-│                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -71,19 +141,10 @@ git push origin --delete feature-x  # Delete remote
 ┌─────────────────────────────────────────────────────────────┐
 │                     GITHUB FLOW                             │
 ├─────────────────────────────────────────────────────────────┤
-│                                                             │
 │ main     ●────────●────────●────────●────────●─────────►   │
 │           \      ↑  \     ↑  \     ↑                        │
 │ feature    \────●    \───●    \───●                         │
 │            (PR)     (PR)     (PR)                           │
-│                                                             │
-│ Rules:                                                      │
-│   1. main is always deployable                              │
-│   2. Branch from main for features                          │
-│   3. Open PR when ready                                     │
-│   4. Merge after review                                     │
-│   5. Deploy immediately after merge                         │
-│                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -92,134 +153,73 @@ git push origin --delete feature-x  # Delete remote
 ┌─────────────────────────────────────────────────────────────┐
 │                  TRUNK-BASED DEV                            │
 ├─────────────────────────────────────────────────────────────┤
-│                                                             │
 │ main    ●──●──●──●──●──●──●──●──●──●──●──●──●─────────►    │
 │            ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑                 │
 │          (frequent small commits to main)                   │
-│                                                             │
-│ Rules:                                                      │
-│   - Short-lived branches (< 1 day)                          │
-│   - Feature flags for incomplete work                       │
-│   - Continuous integration required                         │
-│                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ## Merging Strategies
 
-### Fast-Forward Merge
-```bash
-# When branch is ahead and no divergence
-git checkout main
-git merge feature-x
-# No merge commit created, just pointer moves
-```
-
-### Three-Way Merge
-```bash
-# When branches have diverged
-git checkout main
-git merge feature-x
-# Creates merge commit with two parents
-```
-
-### Squash Merge
-```bash
-# Combine all commits into one
-git checkout main
-git merge --squash feature-x
-git commit -m "Add feature X"
-# Cleaner history, loses individual commits
-```
+| Strategy | Command | Use Case |
+|----------|---------|----------|
+| Fast-Forward | `git merge feature` | Linear history |
+| Three-Way | `git merge feature` | Diverged branches |
+| Squash | `git merge --squash feature` | Clean history |
 
 ## Rebasing
-
-### Basic Rebase
-```bash
-# Replay commits on top of another branch
-git checkout feature-x
-git rebase main
-
-# Before:
-# main:     A──B──C
-# feature:       \──D──E
-
-# After:
-# main:     A──B──C
-# feature:           \──D'──E'
-```
-
-### Interactive Rebase
-```bash
-# Edit, squash, reorder commits
-git rebase -i HEAD~5
-
-# Commands in editor:
-# pick   - use commit
-# reword - edit message
-# edit   - stop and amend
-# squash - combine with previous
-# fixup  - squash, discard message
-# drop   - remove commit
-```
 
 ### Rebase vs Merge
 
 | Aspect | Merge | Rebase |
 |--------|-------|--------|
-| History | Preserves full history | Linear history |
-| Merge commits | Creates merge commits | No merge commits |
-| Conflicts | Resolve once | May resolve multiple times |
-| Safety | Safe for shared branches | Never on shared branches |
-| Traceability | Shows when merged | Shows logical sequence |
+| History | Preserves | Linear |
+| Safety | Shared branches OK | Never on shared |
+| Conflicts | Resolve once | May resolve multiple |
 
-## Conflict Resolution
+---
 
-```bash
-# When conflict occurs:
-CONFLICT (content): Merge conflict in file.txt
+## Troubleshooting Guide
 
-# 1. Open file, find markers
-<<<<<<< HEAD
-Your changes
-=======
-Their changes
->>>>>>> feature-x
-
-# 2. Edit to resolve (keep one, both, or custom)
-The final resolved content
-
-# 3. Mark resolved
-git add file.txt
-
-# 4. Continue
-git merge --continue
-# or
-git rebase --continue
+### Debug Checklist
+```
+□ 1. Current branch? → git branch
+□ 2. Uncommitted changes? → git status
+□ 3. Diverged? → git log --oneline main..HEAD
 ```
 
-## Branch Commands Reference
+### Common Issues
 
-| Command | Purpose |
-|---------|---------|
-| `git branch` | List branches |
-| `git branch name` | Create branch |
-| `git checkout name` | Switch branch |
-| `git checkout -b name` | Create & switch |
-| `git switch name` | Switch (modern) |
-| `git switch -c name` | Create & switch (modern) |
-| `git branch -d name` | Delete (safe) |
-| `git branch -D name` | Delete (force) |
-| `git merge name` | Merge branch |
-| `git rebase name` | Rebase onto branch |
+| Error | Cause | Solution |
+|-------|-------|----------|
+| "already exists" | Branch name taken | Use different name |
+| "not fully merged" | Unmerged commits | Use -D or merge first |
+| "CONFLICT" | Divergent changes | Resolve manually |
+
+---
+
+## Observability
+
+```yaml
+logging:
+  level: INFO
+  events:
+    - branch_created
+    - merge_completed
+    - conflict_detected
+
+metrics:
+  - branches_per_repo
+  - merge_conflict_rate
+```
+
+---
 
 ## Best Practices
 
-1. **Use descriptive branch names**: `feature/user-auth`, `fix/login-bug`
-2. **Keep branches short-lived**: Merge frequently
-3. **Rebase before merge**: Keep history clean
-4. **Delete merged branches**: Avoid clutter
-5. **Never force push to shared branches**
+1. **Descriptive names**: `feature/user-auth`, `fix/login-bug`
+2. **Short-lived branches**: Merge frequently
+3. **Delete merged branches**: Avoid clutter
 
 ---
 
