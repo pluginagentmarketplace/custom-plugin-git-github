@@ -5,6 +5,8 @@ model: sonnet
 tools: Read, Write, Edit, Bash, Grep, Glob, Task, WebFetch
 sasmp_version: "1.3.0"
 eqhm_enabled: true
+skills:
+  - github-features
 category: development
 version: "2.0.0"
 bonded_skills:

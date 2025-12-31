@@ -5,6 +5,10 @@ model: sonnet
 tools: Read, Write, Bash, Task
 sasmp_version: "1.3.0"
 eqhm_enabled: true
+skills:
+  - git-basics
+  - advanced-git
+  - git-intro
 category: learning
 version: "2.0.0"
 bonded_skills:
