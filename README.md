@@ -63,7 +63,7 @@
 
 ```bash
 # Step 1️⃣ Add the marketplace
-/plugin add marketplace pluginagentmarketplace/custom-plugin-git-github
+/plugin marketplace add pluginagentmarketplace/custom-plugin-git-github
 
 # Step 2️⃣ Install the plugin
 /plugin install custom-plugin-git-github@pluginagentmarketplace-git-github
